@@ -27,3 +27,7 @@ class Logger:
     @staticmethod
     def info(msg):
         print(msg)
+
+    @staticmethod
+    def res(msg):
+        print(Logger.WARNING + msg + Logger.ENDC)

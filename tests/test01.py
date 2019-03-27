@@ -2,32 +2,54 @@ from .Logger import Logger
 import socket
 
 
+"""
+
+Scenario ideas :
+
+    - Add CWDUP
+    - Go back when at the root
+
+"""
+
 def test(client, timeout):
     try:
-        Logger.header("[Test 01] PASV LIST Command")
-        Logger.info("[Test 01] Sending PASV")
-        client.send(bytes("PASV\r\n", "UTF-8"))
+        Logger.header("[Test 01] CWD/PWD")
+
+        Logger.info("[Test 01] Sending PWD")
+        client.send(bytes("PWD\r\n", "UTF-8"))
         res = str(client.recv(4096))
-        if "227" not in res:
-            Logger.fail("[Test 01] Wrong response code, expected 227, received: '" + res + "'")
+        if '257 "/"' not in res:
+            if "257" not in res:
+                Logger.fail("[Test 01] Wrong response code, expected 257, received: '" + res + "'")
+            else:
+                Logger.fail("[Test 01] Wrong base path, should be \"/\", received: '" + res + "'")
             Logger.fail("[Test 01] KO")
-            return
-        data = res.split("(")[1].split(")")[0].split(",")
-        data_host = ".".join(data[:4])
-        data_port = int(data[4]) * 256 + int(data[5])
-        data_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        Logger.info("[Test 01] Trying to connect to " + data_host + " on port " + str(data_port))
-        data_sock.connect((data_host, data_port))
-        data_sock.settimeout(timeout)
-        Logger.stepok("[Test 01] Connected")
-        Logger.info("[Test 01] Sending LIST")
-        client.send(bytes("LIST\r\n", "UTF-8"))
-        res = data_sock.recv(4096)
-        if len(res) == 0:
-            Logger.fail("[Test 01] Empty list response")
+            return False
+        Logger.stepok("[Test 01] Base PWD OK")
+
+        Logger.info("[Test 01] Sending CWD public")
+        client.send(bytes("CWD public\r\n", "UTF-8"))
+        res = str(client.recv(4096))
+        if "250" not in res:
+            Logger.fail("[Test 01] Wrong response code, expected 250, received: '" + res + "'")
             Logger.fail("[Test 01] KO")
-            return
-        Logger.testok("[Test 01] LIST OK")
+            return False
+        Logger.stepok("[Test 01] CWD OK")
+
+        Logger.info("[Test 01] Sending PWD")
+        client.send(bytes("PWD\r\n", "UTF-8"))
+        res = str(client.recv(4096))
+        if '257 "/public' not in res:
+            if "257" not in res:
+                Logger.fail("[Test 01] Wrong response code, expected 257, received: '" + res + "'")
+            else:
+                Logger.fail("[Test 01] Wrong base path, should be \"/\", received: '" + res + "'")
+            Logger.fail("[Test 01] KO")
+            return False
+        Logger.stepok("[Test 01] PWD OK")
+        Logger.testok("[Test 01] OK")
+        return True
     except socket.timeout:
         Logger.fail("[Test 01] Connection Timeout: " + str(timeout) + "s")
-        Logger.fail("[Test 01] KO")
+        Logger.fail("[Test 01] Unable to connect to the server, exiting...")
+        return False

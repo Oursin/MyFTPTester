@@ -29,6 +29,7 @@ def test(client, timeout):
             exit(1)
         Logger.stepok("[Test 00] Pass OK")
         Logger.testok("[Test 00] OK")
+        return True
     except socket.timeout:
         Logger.fail("[Test 00] Connection Timeout: " + str(timeout) + "s")
         Logger.fail("[Test 00] Unable to connect to the server, exiting...")

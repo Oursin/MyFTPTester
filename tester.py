@@ -2,9 +2,11 @@
 import socket
 import argparse
 from os import listdir
+from tests.Logger import Logger
+import subprocess
 
-target_host = None
-target_port = None
+target_host = "127.0.0.1"
+target_port = 4242
 timeout = None
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -12,8 +14,6 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 def get_args():
     global target_port, target_host, timeout
     parser = argparse.ArgumentParser()
-    parser.add_argument("host")
-    parser.add_argument("port")
     parser.add_argument("--timeout")
     args = parser.parse_args()
     target_host = args.host
@@ -28,10 +28,16 @@ def get_args():
 
 
 if __name__ == "__main__":
+    subprocess.run(["../myftp", "4242", "."])
     get_args()
     client.connect((target_host, target_port))
     client.settimeout(timeout)
     files = [f.split(".")[0] for f in listdir("./tests") if "test" in f]
     files.sort()
+    total = 0
     for test in files:
-        __import__("tests." + test, fromlist=[""]).test(client, timeout)
+        total += 1 if __import__("tests." + test, fromlist=[""]).test(client, timeout) else 0
+    print()
+    Logger.res("--- SUMMARY ---")
+    Logger.testok(str(total) + " test(s) passed")
+    Logger.fail(str(len(files) - total) + " test(s) failed")
