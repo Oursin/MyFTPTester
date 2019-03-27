@@ -45,31 +45,63 @@ def test_00():
         Colors.info("[Test 00] Awaiting code 220")
         res = str(client.recv(4096))
         if "220" not in res:
-            Colors.fail("Wrong response code, expected 220, received: '" + res + "'" + Colors.ENDC)
-            Colors.fail("Unable to continue testing, exiting...")
+            Colors.fail("[Test 00] Wrong response code, expected 220, received: '" + res + "'")
+            Colors.fail("[Test 00] Unable to continue testing, exiting...")
             exit(1)
         Colors.stepok("[Test 00] Init OK")
         Colors.info("[Test 00] Sending username")
         client.send(bytes("USER Anonymous\r\n", "UTF-8"))
         res = str(client.recv(4096))
         if "331" not in res:
-            Colors.fail("Wrong response code, expected 331, received: '" + res + "'" + Colors.ENDC)
-            Colors.fail("Unable to continue testing, exiting...")
+            Colors.fail("[Test 00] Wrong response code, expected 331, received: '" + res + "'")
+            Colors.fail("[Test 00] Unable to continue testing, exiting...")
             exit(1)
         Colors.stepok("[Test 00] User OK")
         Colors.info("[Test 00] Sending password")
         client.send(bytes("PASS\r\n", "UTF-8"))
         res = str(client.recv(4096))
         if "230" not in res:
-            Colors.fail("Wrong response code, expected 230, received: '" + res + "'" + Colors.ENDC)
-            Colors.fail("Unable to continue testing, exiting...")
+            Colors.fail("[Test 00] Wrong response code, expected 230, received: '" + res + "'")
+            Colors.fail("[Test 00] Unable to continue testing, exiting...")
             exit(1)
         Colors.stepok("[Test 00] Pass OK")
         Colors.testok("[Test 00] OK")
     except socket.timeout:
-        Colors.fail("Connection Timeout: " + str(timeout) + "s")
-        Colors.fail("Unable to connect to the server, exiting...")
+        Colors.fail("[Test 00] Connection Timeout: " + str(timeout) + "s")
+        Colors.fail("[Test 00] Unable to connect to the server, exiting...")
         exit(1)
+
+
+def test_01():
+    try:
+        Colors.header("[Test 01] PASV LIST Command")
+        Colors.info("[Test 01] Sending PASV")
+        client.send(bytes("PASV\r\n", "UTF-8"))
+        res = str(client.recv(4096))
+        if "227" not in res:
+            Colors.fail("[Test 01] Wrong response code, expected 227, received: '" + res + "'")
+            Colors.fail("[Test 01] KO")
+            return
+        data = res.split("(")[1].split(")")[0].split(",")
+        data_host = ".".join(data[:4])
+        data_port = int(data[4]) * 256 + int(data[5])
+        data_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        Colors.info("[Test 01] Trying to connect to " + data_host + " on port " + str(data_port))
+        data_sock.connect((data_host, data_port))
+        data_sock.settimeout(timeout)
+        Colors.stepok("[Test 01] Connected")
+        Colors.info("[Test 01] Sending LIST")
+        client.send(bytes("LIST\r\n", "UTF-8"))
+        res = data_sock.recv(4096)
+        if len(res) == 0:
+            Colors.fail("[Test 01] Empty list response")
+            Colors.fail("[Test 01] KO")
+            return
+        Colors.testok("[Test 01] LIST OK")
+
+    except socket.timeout:
+        Colors.fail("[Test 01] Connection Timeout: " + str(timeout) + "s")
+        Colors.fail("[Test 01] KO")
 
 
 def get_args():
@@ -95,3 +127,4 @@ if __name__ == "__main__":
     client.connect((target_host, target_port))
     client.settimeout(timeout)
     test_00()
+    test_01()
