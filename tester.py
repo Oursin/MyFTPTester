@@ -16,8 +16,6 @@ def get_args():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timeout")
     args = parser.parse_args()
-    target_host = args.host
-    target_port = int(args.port)
     if args.timeout is not None:
         timeout = float(args.timeout)
     else:
