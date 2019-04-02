@@ -8,26 +8,32 @@ class Logger:
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
 
-    @staticmethod
-    def header(msg):
-        print(Logger.HEADER + msg + Logger.ENDC)
+    test = ""
 
-    @staticmethod
-    def fail(msg):
-        print(Logger.FAIL + msg + Logger.ENDC)
+    @classmethod
+    def set_test(cls, nb):
+        cls.test = f"[Test {nb}]"
 
-    @staticmethod
-    def testok(msg):
-        print(Logger.OKGREEN + msg + Logger.ENDC)
+    @classmethod
+    def header(cls, msg):
+        print(f"{Logger.HEADER}{cls.test} {msg}{Logger.ENDC}")
 
-    @staticmethod
-    def stepok(msg):
-        print(Logger.OKBLUE + msg + Logger.ENDC)
+    @classmethod
+    def fail(cls, msg):
+        print(f"{Logger.FAIL}{cls.test} {msg}{Logger.ENDC}")
 
-    @staticmethod
-    def info(msg):
-        print(msg)
+    @classmethod
+    def testok(cls, msg):
+        print(f"{Logger.OKGREEN}{cls.test} {msg}{Logger.ENDC}")
 
-    @staticmethod
-    def res(msg):
-        print(Logger.WARNING + msg + Logger.ENDC)
+    @classmethod
+    def stepok(cls, msg):
+        print(f"{Logger.OKBLUE}{cls.test} {msg}{Logger.ENDC}")
+
+    @classmethod
+    def info(cls, msg):
+        print(f"{Logger.ENDC}{cls.test} {msg}{Logger.ENDC}")
+
+    @classmethod
+    def res(cls, msg):
+        print(f"{Logger.WARNING}{cls.test} {msg}{Logger.ENDC}")
