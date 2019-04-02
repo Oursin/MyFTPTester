@@ -3,16 +3,14 @@ import socket
 import argparse
 from os import listdir, getcwd
 from tests.Logger import Logger
+from tests.Client import Client
 import subprocess
 
-target_host = "127.0.0.1"
-target_port = 4242
 timeout = None
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
 def get_args():
-    global target_port, target_host, timeout
+    global timeout
     parser = argparse.ArgumentParser()
     parser.add_argument("--timeout")
     args = parser.parse_args()
@@ -20,22 +18,19 @@ def get_args():
         timeout = float(args.timeout)
     else:
         timeout = 5.
-    if target_port is None or target_host is None:
-        print("invalid host or port")
-        exit(1)
 
 
 if __name__ == "__main__":
     proc = subprocess.Popen(["../myftp", "4242", getcwd()])
     get_args()
-    client.connect((target_host, target_port))
-    client.settimeout(timeout)
+    client = Client("127.0.0.1", 4242, timeout)
     files = [f.split(".")[0] for f in listdir("./tests") if "test" in f]
     files.sort()
     total = 0
     for test in files:
         total += 1 if __import__("tests." + test, fromlist=[""]).test(client, timeout) else 0
     print()
+    Logger.set_test("")
     Logger.res("--- SUMMARY ---")
     Logger.testok(str(total) + " test(s) passed")
     Logger.fail(str(len(files) - total) + " test(s) failed")

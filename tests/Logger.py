@@ -12,7 +12,10 @@ class Logger:
 
     @classmethod
     def set_test(cls, nb):
-        cls.test = f"[Test {nb}]"
+        if nb == "":
+            cls.test = "---"
+        else:
+            cls.test = f"[Test {nb}]"
 
     @classmethod
     def header(cls, msg):
