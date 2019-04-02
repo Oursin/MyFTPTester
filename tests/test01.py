@@ -26,7 +26,7 @@ def test(client, timeout):
             if "257" not in res:
                 Logger.fail(f"Wrong response code, expected 257, received: '{res}'")
             else:
-                Logger.fail(f"Wrong base path, should be \"/\", received: '{res}'")
+                Logger.fail(f"Wrong base path, should be {cwd}, received: '{res}'")
             Logger.fail("KO")
             return False
         Logger.stepok("Base PWD OK")

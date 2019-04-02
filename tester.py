@@ -26,7 +26,7 @@ def get_args():
 
 
 if __name__ == "__main__":
-    subprocess.Popen(["../myftp", "4242", "."])
+    subprocess.Popen(["../myftp", "4242", "./tests"])
     get_args()
     client.connect((target_host, target_port))
     client.settimeout(timeout)
