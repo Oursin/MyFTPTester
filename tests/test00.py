@@ -5,7 +5,7 @@ import socket
 def test(client, timeout):
     Logger.set_test("00")
     try:
-        Logger.test("Connection to the server")
+        Logger.header("Connection to the server")
         Logger.info("Awaiting code 220")
         res = client.recv(4096).decode("utf-8")
         if "220" not in res:

@@ -16,7 +16,7 @@ Scenario ideas :
 def test(client, timeout):
     Logger.set_test("01")
     try:
-        Logger.test("CWD/PWD")
+        Logger.header("CWD/PWD")
 
         Logger.info("Sending PWD")
         client.send(bytes("PWD\r\n", "UTF-8"))

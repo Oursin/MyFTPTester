@@ -5,7 +5,7 @@ import socket
 def test(client, timeout):
     Logger.set_test("02")
     try:
-        Logger.test("PASV LIST Command")
+        Logger.header("PASV LIST Command")
         Logger.info("Sending PASV")
         client.send(bytes("PASV\r\n", "UTF-8"))
         res = client.recv(4096).decode("utf-8")
