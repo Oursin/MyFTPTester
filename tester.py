@@ -1,7 +1,7 @@
 #!//usr/bin/env python3
 import socket
 import argparse
-from os import listdir
+from os import listdir, getcwd
 from tests.Logger import Logger
 import subprocess
 
@@ -26,7 +26,7 @@ def get_args():
 
 
 if __name__ == "__main__":
-    subprocess.Popen(["../myftp", "4242", "./tests"])
+    proc = subprocess.Popen(["../myftp", "4242", getcwd()])
     get_args()
     client.connect((target_host, target_port))
     client.settimeout(timeout)
@@ -39,3 +39,4 @@ if __name__ == "__main__":
     Logger.res("--- SUMMARY ---")
     Logger.testok(str(total) + " test(s) passed")
     Logger.fail(str(len(files) - total) + " test(s) failed")
+    proc.kill()

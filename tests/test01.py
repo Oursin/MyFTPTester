@@ -43,11 +43,11 @@ def test(client, timeout):
         Logger.info("Sending PWD")
         client.send(bytes("PWD\r\n", "UTF-8"))
         res = client.recv(4096).decode("utf-8")
-        if f'257 {cwd}/public' not in res:
+        if f'257 "{cwd}/public"' not in res:
             if "257" not in res:
                 Logger.fail(f"Wrong response code, expected 257, received: '{res}'")
             else:
-                Logger.fail(f"Wrong base path, should be \"/\", received: '{res}'")
+                Logger.fail(f"Wrong base path, should be {cwd}/public, received: '{res}'")
             Logger.fail("KO")
             return False
         Logger.stepok("PWD OK")
