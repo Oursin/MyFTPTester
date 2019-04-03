@@ -63,11 +63,12 @@ def test(client, timeout, _):
             return False
         Logger.stepok("Root OK")
 
-        Logger.info("[BONUS] CDUP")
+        Logger.info("CDUP")
         if not check_cwd(client, f"{cwd}/public"):
             return False
-        if check_cdup(client, cwd):
-            Logger.stepok("[BONUS] CDUP OK")
+        if not check_cdup(client, cwd):
+            return False
+        Logger.stepok("CDUP OK")
 
         Logger.testok("OK")
         return True
