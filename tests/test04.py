@@ -4,7 +4,7 @@ import socket
 
 
 def check_recv(client, data, target, content):
-    client.send(f"RECV {target}")
+    client.send(f"RETR {target}")
 
     res = client.recv()
     if "150" not in res:
@@ -31,7 +31,7 @@ def check_recv(client, data, target, content):
 def test(client, timeout, v):
     Logger.set_test("03")
     try:
-        Logger.header("Passive RECV")
+        Logger.header("Passive RETR")
 
         data = passive(client, timeout, v)
         if data is None:
@@ -39,7 +39,7 @@ def test(client, timeout, v):
         if not check_recv(client, data, "public/file", "OK"):
             return False
 
-        Logger.stepok("Basic RECV OK")
+        Logger.stepok("Basic RETR OK")
         Logger.testok("OK")
         return True
     except socket.timeout:
