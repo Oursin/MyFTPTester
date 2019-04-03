@@ -2,7 +2,7 @@ from .Logger import Logger
 import socket
 
 
-def test(client, timeout):
+def test(client, timeout, _):
     Logger.set_test("03")
     try:
         Logger.header("NOOP")

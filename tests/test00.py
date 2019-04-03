@@ -2,7 +2,7 @@ from .Logger import Logger
 import socket
 
 
-def test(client, timeout):
+def test(client, timeout, _):
     Logger.set_test("00")
     try:
         Logger.header("Connection to the server")

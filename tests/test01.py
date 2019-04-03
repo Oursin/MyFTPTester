@@ -36,7 +36,7 @@ def check_pwd(client, target):
     return True
 
 
-def test(client, timeout):
+def test(client, timeout, _):
     Logger.set_test("01")
     cwd = os.getcwd()
     try:
