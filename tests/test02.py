@@ -58,7 +58,7 @@ def test(client, timeout, verbose):
             return False
         Logger.stepok("LIST Basic OK")
 
-        data = create_pasv(client, timeout)
+        data = create_pasv(client, timeout, verbose)
         if data is None:
             return False
         if not check_list(client, data, "public", "file"):
