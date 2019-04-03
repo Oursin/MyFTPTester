@@ -13,7 +13,7 @@ def check_recv(client, data, target, content):
         Logger.fail("KO")
         return False
 
-    res = data.recv
+    res = data.recv()
     if content not in res:
         Logger.fail(f"{content} not found in file, received {res}")
         Logger.fail("KO")
