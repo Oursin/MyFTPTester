@@ -3,7 +3,7 @@ from .Client import Client
 import socket
 
 
-def create_pasv(client, timeout):
+def create_pasv(client, timeout, verbose):
     client.send("PASV")
     res = client.recv()
     if "227" not in res:
@@ -15,7 +15,7 @@ def create_pasv(client, timeout):
     data_port = int(data[4]) * 256 + int(data[5])
 
     Logger.info("Trying to connect to " + data_host + " on port " + str(data_port))
-    data_conn = Client(data_host, data_port, timeout)
+    data_conn = Client(data_host, data_port, timeout, verbose)
     Logger.stepok("Connected")
     return data_conn
 
@@ -46,12 +46,12 @@ def check_list(client, data, arg, search):
     return True
 
 
-def test(client, timeout):
+def test(client, timeout, verbose):
     Logger.set_test("02")
     try:
         Logger.header("PASV LIST Command")
 
-        data = create_pasv(client, timeout)
+        data = create_pasv(client, timeout, verbose)
         if data is None:
             return False
         if not check_list(client, data, "", "public"):

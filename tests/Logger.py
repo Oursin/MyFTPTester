@@ -9,6 +9,7 @@ class Logger:
     UNDERLINE = '\033[4m'
 
     test = ""
+    verbosity = False
 
     @classmethod
     def set_test(cls, nb):
@@ -16,6 +17,10 @@ class Logger:
             cls.test = "---"
         else:
             cls.test = f"[Test {nb}]"
+
+    @classmethod
+    def set_verbosity(cls, v):
+        cls.verbosity = v
 
     @classmethod
     def header(cls, msg):
@@ -31,11 +36,13 @@ class Logger:
 
     @classmethod
     def stepok(cls, msg):
-        print(f"{Logger.OKBLUE}{cls.test} {msg}{Logger.ENDC}")
+        if cls.verbosity:
+            print(f"{Logger.OKBLUE}{cls.test} {msg}{Logger.ENDC}")
 
     @classmethod
     def info(cls, msg):
-        print(f"{Logger.ENDC}{cls.test} {msg}{Logger.ENDC}")
+        if cls.verbosity:
+            print(f"{Logger.ENDC}{cls.test} {msg}{Logger.ENDC}")
 
     @classmethod
     def res(cls, msg):

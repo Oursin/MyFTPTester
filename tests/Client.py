@@ -1,10 +1,12 @@
 import socket
 
+
 class Client:
-    def __init__(self, host, port, timeout):
+    def __init__(self, host, port, timeout, verbose):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.client.connect((host, port))
         self.client.settimeout(timeout)
+        self.verbose = verbose
 
     def __del__(self):
         self.client.close()
